@@ -1,0 +1,11 @@
+.stockButton {
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border: solid 1px rgb(209, 209, 209);
+    border-radius: 4px;
+    background-color: #f3f7fb;
+    font-size: 1em;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}

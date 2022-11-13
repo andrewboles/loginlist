@@ -1,0 +1,53 @@
+.todoItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: solid 1px rgb(209, 209, 209);
+    border-radius: 4px;
+    background-color: #f3f7fb;
+    font-size: 1em;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: 0.6em;
+    margin-bottom: 0.2em;
+}
+
+.listContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 0px;
+    width: 340px;
+}
+
+.listHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.2em;
+}
+
+.buttonContainer {
+    width: 100px
+}
+
+.searchInput {
+    border: solid 1px rgb(209, 209, 209);
+    padding-left: 1.5em;
+    border-radius: 10px;
+    padding: 0.5em;
+    padding-left: 1.5em;
+    width: 100%;
+}
+
+.inputContainer {
+    position: relative;
+    margin-right: 0.2em;
+    flex: 1;
+}
+
+.searchIcon {
+    position: absolute;
+    top: 50%;
+    left: 0.3em;
+  transform: translateY(-50%);
+}
