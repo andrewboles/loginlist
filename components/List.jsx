@@ -8,55 +8,89 @@ import StockButton from "./StockButton";
 const asap = Asap({ weight: "500", style: "normal", subsets: ["latin"] });
 
 const List = ({ items }) => {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [itemsState, setItemsState] = useState(items)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [itemsState, setItemsState] = useState(items);
+  const [mounted, setMounted] = useState(false);
 
-  const filterItems = rawItems => {
-    if(rawItems === []) return []
-    return rawItems.filter(item => item.text.toLowerCase().includes(searchTerm.toLowerCase()))
-  }
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
 
-  const deleteItem = id => {
-    let tempItems = []
-    tempItems = items.filter(item => item.id !== id)
-    localStorage.setItem('todos',tempItems)
-  }
+  const filterItems = (rawItems) => {
+    if (rawItems === []) return [];
+    return rawItems.filter((item) =>
+      item.text?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
+  const deleteItem = (id) => {
+    let tempItems = [];
+    tempItems = itemsState.filter((item) => item.id !== id);
+    setItemsState(tempItems);
+    localStorage.setItem("todos", JSON.stringify(tempItems));
+  };
 
   const createNewItem = () => {
-    console.log(items)
-    localStorage.setItem('todos',JSON.stringify([{
+    const newItem = {
       id: uniqid(),
       text: "",
-      edit: true
-    }]))
-  }
+      edit: true,
+    };
+    setSearchTerm("");
+    localStorage.setItem("todos", JSON.stringify([newItem, ...itemsState]));
+    setItemsState((current) => {
+      return [newItem, ...current];
+    });
+  };
 
-  const saveItem = ({item}) => {
-    
-  }
+  const saveItem = (editedItem) => {
+    let tempItems = [];
+    tempItems = itemsState.map((item) =>
+      item.id === editedItem.id ? editedItem : item
+    );
+    setItemsState(tempItems);
+    localStorage.setItem("todos", JSON.stringify(tempItems));
+  };
 
   return (
     <div className={styles.listContainer}>
       <div className={styles.listHeader}>
         <div className={styles.inputContainer}>
           <Icon icon="ci:search" className={styles.searchIcon} />
-        <input className={styles.searchInput} type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}/>
+          <input
+            className={styles.searchInput}
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-        <StockButton onClick={createNewItem}>New <Icon icon="el:file-new" /></StockButton>
+        <StockButton onClick={createNewItem}>
+          New <Icon icon="el:file-new" />
+        </StockButton>
       </div>
-      {items ? filterItems(items).map((todoItem) => (
-        <ListItem edit={todoItem?.edit} key={todoItem.id} {...{ todoItem, deleteItem }} />
-      )) : null}
+      {itemsState
+        ? filterItems(itemsState).map((todoItem) => (
+            <ListItem
+              edit={todoItem?.edit}
+              key={todoItem.id}
+              {...{ todoItem, deleteItem, saveItem }}
+            />
+          ))
+        : null}
     </div>
   );
 };
 
-const ListItem = ({ todoItem, edit, deleteItem }) => {
+const ListItem = ({ todoItem, edit, deleteItem, saveItem }) => {
   const [editMode, setEditMode] = useState(edit ?? false);
   const [textContent, setTextContent] = useState(todoItem.text);
 
   const handleChange = (e) => {
     setTextContent(e.target.value);
+  };
+
+  const handleSave = () => {
+    setEditMode(false);
+    saveItem({ text: textContent, edit: false, id: todoItem.id });
   };
 
   return (
@@ -68,16 +102,16 @@ const ListItem = ({ todoItem, edit, deleteItem }) => {
       )}
       <div className={styles.buttonContainer}>
         {editMode ? (
-          <StockButton onClick={() => setEditMode(false)}>
-            <Icon icon="entypo:save"/>
+          <StockButton onClick={handleSave}>
+            <Icon icon="entypo:save" />
           </StockButton>
         ) : (
           <>
             <StockButton onClick={() => setEditMode(true)}>
-              <Icon icon="bi:pencil-square"/>
+              <Icon icon="bi:pencil-square" />
             </StockButton>
             <StockButton onClick={() => deleteItem(todoItem.id)}>
-              <Icon icon="entypo:trash"/>
+              <Icon icon="entypo:trash" />
             </StockButton>
           </>
         )}
