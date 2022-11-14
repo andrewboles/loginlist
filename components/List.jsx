@@ -26,7 +26,7 @@ const List = ({ items, user }) => {
     let tempItems = [];
     tempItems = itemsState.filter((item) => item.id !== id);
     setItemsState(tempItems);
-    localStorage.setItem(`${user}-todos`, JSON.stringify(tempItems));
+    localStorage.setItem(`${user.user_username}-todos`, JSON.stringify(tempItems));
   };
 
   const createNewItem = () => {
@@ -36,7 +36,7 @@ const List = ({ items, user }) => {
       edit: true,
     };
     setSearchTerm("");
-    localStorage.setItem(`${user}-todos`, JSON.stringify([newItem, ...itemsState]));
+    localStorage.setItem(`${user.user_username}-todos`, JSON.stringify([newItem, ...itemsState]));
     setItemsState((current) => {
       return [newItem, ...current];
     });
@@ -48,7 +48,7 @@ const List = ({ items, user }) => {
       item.id === editedItem.id ? editedItem : item
     );
     setItemsState(tempItems);
-    localStorage.setItem(`${user}-todos`, JSON.stringify(tempItems));
+    localStorage.setItem(`${user.user_username}-todos`, JSON.stringify(tempItems));
   };
 
   return (

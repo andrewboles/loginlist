@@ -1,3 +1,4 @@
+import { useState } from 'react' 
 import styles from "../styles/Login.module.css";
 import { useForm } from "react-hook-form";
 import { useUser } from "../hooks/useUser";
@@ -14,6 +15,7 @@ const asap = Asap({ weight: "400", style: "normal", subsets: ["latin"] });
 
 const Login = () => {
   const { setUserContext } = useUser();
+  const [serverError, setServerError] = useState(false)
   const {
     register,
     handleSubmit,
@@ -21,22 +23,21 @@ const Login = () => {
   } = useForm({ mode: "onChange" });
 
   const onSubmit = async (data) => {
+    setServerError(false)
     try {
       const response = await axios.post(
         "http://dev.rapptrlabs.com/Tests/scripts/user-login.php",
         { email: data.email, password: data.password }
       );
-      console.log(response.data);
+      
       setUserContext((current) => {
-        return { ...current, user: response.data.user_username };
+        return { ...current, user: response.data };
       });
+      localStorage.setItem("user", JSON.stringify(response.data));
     } catch (err) {
       console.log(err);
+      setServerError(true)
     }
-    localStorage.setItem("user", JSON.stringify({ email: data.email }));
-    setUserContext((current) => {
-      return { ...current, user: data.email };
-    });
   };
 
   return (
@@ -100,6 +101,7 @@ const Login = () => {
         >
           Login
         </button>
+        {serverError && <span className={styles.errorText}>The server could not be reached. Please try Again Later</span>}
       </form>
     </div>
   );

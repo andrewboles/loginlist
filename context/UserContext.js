@@ -4,7 +4,6 @@ const UserContext = createContext([{}, () => {}]);
 
 const UserProvider = (props) => {
   const [state, setState] = useState({});
-  let userFromStorage = null;
 
   return (
     <UserContext.Provider value={[state, setState]}>
@@ -23,7 +22,7 @@ const UserFromStorage = ({ children }) => {
     if (window.location != "undefined") {
       storageUser = JSON.parse(localStorage.getItem("user"));
       if (storageUser) {
-        setUserContext({ user: storageUser.email });
+        setUserContext({ user: storageUser });
       }
     }
   }, []);
