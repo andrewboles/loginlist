@@ -7,7 +7,7 @@ import StockButton from "./StockButton";
 
 const asap = Asap({ weight: "500", style: "normal", subsets: ["latin"] });
 
-const List = ({ items }) => {
+const List = ({ items, user }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [itemsState, setItemsState] = useState(items);
   const [mounted, setMounted] = useState(false);
@@ -26,7 +26,7 @@ const List = ({ items }) => {
     let tempItems = [];
     tempItems = itemsState.filter((item) => item.id !== id);
     setItemsState(tempItems);
-    localStorage.setItem("todos", JSON.stringify(tempItems));
+    localStorage.setItem(`${user}-todos`, JSON.stringify(tempItems));
   };
 
   const createNewItem = () => {
@@ -36,7 +36,7 @@ const List = ({ items }) => {
       edit: true,
     };
     setSearchTerm("");
-    localStorage.setItem("todos", JSON.stringify([newItem, ...itemsState]));
+    localStorage.setItem(`${user}-todos`, JSON.stringify([newItem, ...itemsState]));
     setItemsState((current) => {
       return [newItem, ...current];
     });
@@ -48,11 +48,12 @@ const List = ({ items }) => {
       item.id === editedItem.id ? editedItem : item
     );
     setItemsState(tempItems);
-    localStorage.setItem("todos", JSON.stringify(tempItems));
+    localStorage.setItem(`${user}-todos`, JSON.stringify(tempItems));
   };
 
   return (
     <div className={styles.listContainer}>
+      <h1 className={`${styles.headerText} ${asap.className}`} >My To-do List</h1>
       <div className={styles.listHeader}>
         <div className={styles.inputContainer}>
           <Icon icon="ci:search" className={styles.searchIcon} />
@@ -96,7 +97,7 @@ const ListItem = ({ todoItem, edit, deleteItem, saveItem }) => {
   return (
     <div className={`${styles.todoItem} ${asap.className}`}>
       {editMode ? (
-        <input type="text" value={textContent} onChange={handleChange} />
+        <input type="text" value={textContent} onChange={handleChange} className={`${styles.editInput} ${asap.className}`} />
       ) : (
         <div>{textContent}</div>
       )}

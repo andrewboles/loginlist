@@ -2,8 +2,8 @@ import styles from "../styles/Login.module.css";
 import { useForm } from "react-hook-form";
 import { useUser } from "../hooks/useUser";
 import { Righteous, Asap } from "@next/font/google";
-import { Icon } from '@iconify/react'
-import axios from 'axios'
+import { Icon } from "@iconify/react";
+import axios from "axios";
 
 const righteous = Righteous({
   weight: "400",
@@ -18,21 +18,25 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
-  } = useForm({mode: 'onChange'});
+  } = useForm({ mode: "onChange" });
 
   const onSubmit = async (data) => {
-    try{
-      const response = await axios.post("http://dev.rapptrlabs.com/Tests/scripts/user-login.php",{email: data.email, password: data.password})
-      console.log(response.data)
+    try {
+      const response = await axios.post(
+        "http://dev.rapptrlabs.com/Tests/scripts/user-login.php",
+        { email: data.email, password: data.password }
+      );
+      console.log(response.data);
       setUserContext((current) => {
         return { ...current, user: response.data.user_username };
       });
-    } catch (err){
-      console.log(err)
-    }  
+    } catch (err) {
+      console.log(err);
+    }
+    localStorage.setItem("user", JSON.stringify({ email: data.email }));
     setUserContext((current) => {
-      return { ...current, user: "person" };
-    }); 
+      return { ...current, user: data.email };
+    });
   };
 
   return (
@@ -42,13 +46,17 @@ const Login = () => {
       </h2>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.loginForm}>
         <div className={styles.inputWrapper}>
-          <Icon icon="bi:person-fill" className={styles.icon}/>
+          <Icon icon="bi:person-fill" className={styles.icon} />
           <input
             placeholder="user@rapptrlabs.com"
-            {...register("email", { required: true, maxLength: 50, pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "invalid email address"
-            } })}
+            {...register("email", {
+              required: true,
+              maxLength: 50,
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "invalid email address",
+              },
+            })}
             className={
               errors.email
                 ? `${styles.textInput} ${styles.inputError} ${asap.className}`
@@ -60,11 +68,15 @@ const Login = () => {
           <span className={styles.errorText}>{errors.email.message}</span>
         )}
         <div className={styles.inputWrapper}>
-        <Icon icon="bxs:lock-alt" className={styles.icon}/>
+          <Icon icon="bxs:lock-alt" className={styles.icon} />
           <input
             placeholder="Must be at least 4 chars"
             type="password"
-            {...register("password", { required: true, minLength: 4, maxLength: 16 })}
+            {...register("password", {
+              required: true,
+              minLength: 4,
+              maxLength: 16,
+            })}
             className={
               errors.password
                 ? `${styles.textInput} ${styles.inputError} ${asap.className}`
@@ -73,12 +85,18 @@ const Login = () => {
           />
         </div>
         {errors.password && (
-          <span className={styles.errorText}>Must be at least 4 characters</span>
+          <span className={styles.errorText}>
+            Must be at least 4 characters
+          </span>
         )}
         <button
           type="submit"
-          className={isValid ? `${styles.submitButton} ${asap.className}` : `${styles.submitButton} ${asap.className} ${styles.disabledButton}`}
-          disabled={!isValid}
+          className={
+            isValid
+              ? `${styles.submitButton} ${asap.className}`
+              : `${styles.submitButton} ${asap.className} ${styles.disabledButton}`
+          }
+          disabled={!isValid || isSubmitting}
         >
           Login
         </button>

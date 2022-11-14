@@ -1,6 +1,6 @@
 .stockButton {
-    padding-top: 0.3em;
-    padding-bottom: 0.3em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
     padding-left: 1em;
     padding-right: 1em;
     border: solid 1px rgb(209, 209, 209);
@@ -8,4 +8,12 @@
     background-color: #f3f7fb;
     font-size: 1em;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    transition: all 0.25s;
+    scale: 1;
+}
+
+.stockButton:hover {
+    background-color: #9b9da0;
+    backface-visibility: hidden;
+    color: #f3f7fb;
 }
