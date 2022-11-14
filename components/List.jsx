@@ -85,10 +85,6 @@ const ListItem = ({ todoItem, edit, deleteItem, saveItem }) => {
   const [editMode, setEditMode] = useState(edit ?? false);
   const [textContent, setTextContent] = useState(todoItem.text);
 
-  const handleChange = (e) => {
-    setTextContent(e.target.value);
-  };
-
   const handleSave = () => {
     setEditMode(false);
     saveItem({ text: textContent, edit: false, id: todoItem.id });
@@ -97,7 +93,7 @@ const ListItem = ({ todoItem, edit, deleteItem, saveItem }) => {
   return (
     <div className={`${styles.todoItem} ${asap.className}`}>
       {editMode ? (
-        <input type="text" value={textContent} onChange={handleChange} className={`${styles.editInput} ${asap.className}`} />
+        <input type="text" value={textContent} onChange={e=> setTextContent(e.target.value)} className={`${styles.editInput} ${asap.className}`} />
       ) : (
         <div>{textContent}</div>
       )}
